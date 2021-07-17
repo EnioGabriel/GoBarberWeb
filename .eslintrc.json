@@ -24,6 +24,8 @@
         "allowExpressions": true
       }
     ],
+    "camelcase": "off",
+    "@typescript-eslint/camelcase": "off",
     "no-use-before-define": "off",
     "react/jsx-props-no-spreading": "off",
     "react/prop-types": "off",
