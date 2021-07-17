@@ -75,7 +75,7 @@ const ForgotPassword: React.FC = () => {
             <Button type="submit">Recuperar</Button>
           </Form>
 
-          <Link to="/signup">
+          <Link to="/">
             <FiLogIn />
             Voltar ao login
           </Link>
