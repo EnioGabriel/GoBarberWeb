@@ -46,6 +46,12 @@ export const Container = styled.div<ContainerProps>`
       color: #ff9000;
     `}
 
+    // Corrigindo mudança na cor do input qnd autofilled do chrome é utilizado
+    input:-webkit-autofill,
+      input:-webkit-autofill:focus {
+    transition: background-color 600000s 0s, color 600000s 0s;
+  }
+
   input {
     flex: 1; // ocupa todo espaço possivel
     background: transparent;
