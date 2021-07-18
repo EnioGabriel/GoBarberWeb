@@ -26,6 +26,7 @@
     ],
     "import/no-duplicates": "off",
     "camelcase": "off",
+    "arrow-body-style": "off",
     "@typescript-eslint/camelcase": "off",
     "no-use-before-define": "off",
     "react/jsx-props-no-spreading": "off",
