@@ -28,19 +28,25 @@ interface AuthContextData {
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 const AuthProvider: React.FC = ({ children }) => {
-  // Armazenar dados no storage para nao ficar pedindo autentificação toda hora
+  // Armazenar dados no storage para nao ficar pedindo autenticação toda hora
+  // este estado altera toda vez q a pagina é recarregada
   const [data, setData] = useState<AuthState>(() => {
     const token = localStorage.getItem('@GoBarber:token');
     const user = localStorage.getItem('@GoBarber:user');
 
     // Verificar se já está prenchido com o token e usuário
     if (token && user) {
+      // Define um cabeçalho com o nome authorization passando o token como valor
+      api.defaults.headers.authorization = `Bearer ${token}`;
+
       return { token, user: JSON.parse(user) };
     }
+
     // Caso não esteja preenchido, retorna vazio
     return {} as AuthState;
   });
 
+  // Estado de login
   const signIn = useCallback(async ({ email, password }) => {
     // 'sessions': rota no backend de login
     const response = await api.post('sessions', {
@@ -52,6 +58,9 @@ const AuthProvider: React.FC = ({ children }) => {
 
     localStorage.setItem('@GoBarber:token', token);
     localStorage.setItem('@GoBarber:user', JSON.stringify(user));
+
+    // Define um cabeçalho com o nome authorization passando o token como valor
+    api.defaults.headers.authorization = `Bearer ${token}`;
 
     setData({ token, user });
   }, []);
