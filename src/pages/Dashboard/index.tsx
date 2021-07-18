@@ -1,6 +1,8 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import { isToday, format } from 'date-fns';
+import ptBR from 'date-fns/esm/locale/pt-BR';
 import DayPicker, { DayModifiers } from 'react-day-picker';
-// Exportando styled padrão da lib
+// importando style padrão da lib
 import 'react-day-picker/lib/style.css';
 
 import { FiClock, FiPower } from 'react-icons/fi';
@@ -25,28 +27,42 @@ interface MonthAvailabilityItem {
   available: boolean;
 }
 
+interface Appointment {
+  id: string;
+  date: string;
+  user: {
+    name: string;
+    avatar_url: string;
+  };
+}
+
 const Dashboard: React.FC = () => {
   const { signOut, user } = useAuth();
 
-  const [selectDate, setSelectDate] = useState(new Date());
+  const [selectedDate, setSelectDate] = useState(new Date());
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
   const [monthAvailability, setMonthAvailability] = useState<
     MonthAvailabilityItem[]
   >([]);
 
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
+
+  // useCallback: retorna uma função
   const handleDateChange = useCallback((day: Date, modifiers: DayModifiers) => {
     if (modifiers.available) {
       setSelectDate(day);
     }
   }, []);
 
+  // useCallback: retorna uma função
   const handleMonthChange = useCallback((month: Date) => {
     setCurrentMonth(month);
   }, []);
 
+  // useEffect: executa uma função
   // Dispara uma função qnd uma ou mais váriaveis alterarem
-  //  nesse caso, currentMonth
+  //  nesse caso, currentMonth, user.id
   useEffect(() => {
     api
       .get(`/providers/${user.id}/month-availability`, {
@@ -61,6 +77,22 @@ const Dashboard: React.FC = () => {
       });
   }, [currentMonth, user.id]);
 
+  useEffect(() => {
+    api
+      .get('/appointments/me', {
+        params: {
+          year: selectedDate.getFullYear(),
+          month: selectedDate.getMonth() + 1,
+          day: selectedDate.getDate(),
+        },
+      })
+      .then((response) => {
+        setAppointments(response.data);
+        console.log(response.data);
+      });
+  }, [selectedDate]);
+
+  // useMemo: retorna um valor já calculado
   // Memoriza um valor e vc seta qnd ele será recarregado
   const disableDays = useMemo(() => {
     const dates = monthAvailability
@@ -74,6 +106,18 @@ const Dashboard: React.FC = () => {
 
     return dates;
   }, [currentMonth, monthAvailability]);
+
+  // eslint-disable-next-line
+  const selectedDateAsText = useMemo(() => {
+    return format(selectedDate, "'Dia' dd 'de' MMMM", {
+      locale: ptBR,
+    });
+  }, [selectedDate]);
+
+  // eslint-disable-next-line
+  const selectedWeekDay = useMemo(() => {
+    return format(selectedDate, 'cccc', { locale: ptBR });
+  }, [selectedDate]);
 
   return (
     <Container>
@@ -98,9 +142,9 @@ const Dashboard: React.FC = () => {
         <Schedule>
           <h1>Horários agendados</h1>
           <p>
-            <span>Hoje</span>
-            <span>Dia 6</span>
-            <span>Segunda-feira</span>
+            {isToday(selectedDate) && <span>Hoje</span>}
+            <span>{selectedDateAsText}</span>
+            <span>{selectedWeekDay}</span>
           </p>
 
           <NextAppointment>
@@ -151,7 +195,7 @@ const Dashboard: React.FC = () => {
               available: { daysOfWeek: [1, 2, 3, 4, 5] },
             }}
             onMonthChange={handleMonthChange}
-            selectedDays={selectDate}
+            selectedDays={selectedDate}
             onDayClick={handleDateChange}
             weekdaysShort={['D', 'S', 'T', 'Q', 'Q', 'S', 'S']}
             months={[

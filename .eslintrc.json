@@ -24,6 +24,7 @@
         "allowExpressions": true
       }
     ],
+    "import/no-duplicates": "off",
     "camelcase": "off",
     "@typescript-eslint/camelcase": "off",
     "no-use-before-define": "off",
