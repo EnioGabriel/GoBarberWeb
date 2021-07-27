@@ -64,6 +64,8 @@ const Input: React.FC<InputProps> = ({
       isErrored={!!error}
       isFilled={isFilled}
       isFocused={isFocused}
+      // Variavel utilizada para validação no teste de input (getTestById)
+      data-testid="input-container"
     >
       {Icon && <Icon size={20} />}
       {/* pegando todas as propriedades e passando dentro do input */}
