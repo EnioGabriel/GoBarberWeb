@@ -6,6 +6,12 @@
 
 Aplicação web para gerenciar serviços de atendimento à barbearia, onde os prestadores podem visualizar seus atendimentos com clientes (cadastrados na [parte mobile](https://github.com/EnioGabriel/GoBarberWeb) da aplicação).
 
+### Telas do projeto
+- Telas de login, pefil e dashboard:
+<p align="center">
+  <img align="center" alt="GIF" src="https://media.giphy.com/media/dYN8dKM4HoQ4C47plt/giphy.gif" width="500" />
+</p>
+
 ### Tecnologias utilizadas
 
 O projeto foi feito com as seguintes tecnologias:
